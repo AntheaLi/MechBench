@@ -1,4 +1,4 @@
-# MechanismBench
+# MechBench v0
 
 MechanismBench is a benchmark harness for evaluating whether an automated
 researcher can identify the causal source of an apparent ML improvement through
