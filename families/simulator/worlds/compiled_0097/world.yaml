@@ -1,0 +1,224 @@
+{
+  "budget": {
+    "max_cost": 5.92
+  },
+  "causal_label": "seed_hacking",
+  "certificate": {
+    "certificate_version": "0.1",
+    "certified": true,
+    "checks": {
+      "fresh_data_seed_removes_gain": true,
+      "has_at_least_three_private_interventions": true,
+      "headline_baseline_in_shared_range": true,
+      "headline_delta_in_shared_range": true,
+      "minimum_intervention_margin_met": true,
+      "preregistered_seed_panel_removes_gain": true,
+      "private_mean_below_practical_threshold": true,
+      "public_demo_seed_positive": true
+    },
+    "compiler_version": "0.1",
+    "episode_id": "simulator/compiled_0097",
+    "exhaustive_cost": 14.55,
+    "minimum_intervention_margin": 0.015,
+    "observed_intervention_margin": 0.0329,
+    "oracle_minimum_cost": 2.46,
+    "prediction_tolerance": 0.02,
+    "private_seed_stability": 0.09,
+    "public_only_predictability": 0.2,
+    "world_type": "seed_hacking"
+  },
+  "fair_comparison_truth": {
+    "compute_matched": "gain_does_not_survive",
+    "multi_seed": "gain_does_not_survive",
+    "norm_matched": "not_decisive_single_seed",
+    "parameter_matched": "not_decisive_single_seed"
+  },
+  "family": "simulator",
+  "headline": {
+    "baseline_metrics": {
+      "validation_id.accuracy": 0.7129
+    },
+    "description": "The structured routing branch improves validation accuracy from 0.713 to 0.752 on the public validation split.",
+    "proposed_metrics": {
+      "validation_id.accuracy": 0.7519
+    }
+  },
+  "improvement_truth": {
+    "delta": 0.0048,
+    "status": "not_reliably_positive"
+  },
+  "interventions": [
+    {
+      "description": "Evaluate the proposed and baseline systems on a fixed private panel of preregistered unseen seeds.",
+      "expected_delta": 0.0048,
+      "id": "hidden_preregistered_seed_panel",
+      "metadata": {
+        "intervention_type": "primary_confound_breaking"
+      },
+      "qualitative_result": "gain_disappears"
+    },
+    {
+      "description": "Apply a fixed checkpoint-selection rule before comparing baseline and proposed models.",
+      "expected_delta": 0.0038,
+      "id": "hidden_fixed_checkpoint_rule",
+      "metadata": {
+        "intervention_type": "strongest_alternative"
+      },
+      "qualitative_result": "gain_disappears"
+    },
+    {
+      "description": "Re-evaluate the public training recipe under a fresh private data seed.",
+      "expected_delta": 0.0058,
+      "id": "hidden_fresh_data_seed",
+      "metadata": {
+        "intervention_type": "generalization"
+      },
+      "qualitative_result": "gain_disappears"
+    }
+  ],
+  "mechanism_support_truth": "claimed_mechanism_not_supported",
+  "name": "compiled_0097",
+  "practical_value_truth": "the public gain is not reliable across preregistered seeds",
+  "simulator": {
+    "base_accuracy": {
+      "validation_distractor_shift": 0.6865,
+      "validation_id": 0.7129,
+      "validation_long": 0.678,
+      "validation_position_shift": 0.6929
+    },
+    "base_parameter_count": 1000000,
+    "base_train_flops": 1000000000.0,
+    "seed_noise": 0.00072,
+    "variants": {
+      "baseline": {
+        "branch_base_norm_ratio": 0.0,
+        "estimated_train_flops": 1000000000.0,
+        "factors": {
+          "capacity": 0.0,
+          "compute": 0.0,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1000000
+      },
+      "fixed_random_branch": {
+        "branch_base_norm_ratio": 0.6,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.001,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000
+      },
+      "generic_learned_branch": {
+        "branch_base_norm_ratio": 0.66,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.003,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000
+      },
+      "geometry_destroyed_branch": {
+        "branch_base_norm_ratio": 0.71,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.002,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000
+      },
+      "norm_matched_proposed": {
+        "branch_base_norm_ratio": 0.61,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.0038,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000,
+        "seed_effects": {
+          "validation_id": {
+            "0:0": 0.0324
+          }
+        }
+      },
+      "parameter_matched_wider": {
+        "branch_base_norm_ratio": 0.0,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.003,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000
+      },
+      "proposed": {
+        "branch_base_norm_ratio": 0.72,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.0038,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000,
+        "seed_effects": {
+          "validation_id": {
+            "0:0": 0.0341
+          },
+          "validation_long": {
+            "0:0": 0.0256
+          },
+          "validation_position_shift": {
+            "0:0": 0.0222
+          }
+        }
+      },
+      "scale_matched_generic": {
+        "branch_base_norm_ratio": 0.72,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.003,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.001,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000
+      }
+    }
+  },
+  "world_id": "simulator/compiled_0097"
+}

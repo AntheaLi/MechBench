@@ -1,0 +1,247 @@
+{
+  "budget": {
+    "max_cost": 5.61
+  },
+  "causal_label": "true_mechanism",
+  "certificate": {
+    "certificate_version": "0.1",
+    "certified": true,
+    "checks": {
+      "generic_capacity_does_not_recover_gain": true,
+      "geometry_destruction_removes_gain": true,
+      "has_at_least_three_private_interventions": true,
+      "headline_baseline_in_shared_range": true,
+      "headline_delta_in_shared_range": true,
+      "minimum_intervention_margin_met": true,
+      "norm_matching_preserves_gain": true,
+      "structured_branch_has_practical_gain": true
+    },
+    "compiler_version": "0.1",
+    "episode_id": "simulator/compiled_0091",
+    "exhaustive_cost": 14.77,
+    "minimum_intervention_margin": 0.015,
+    "observed_intervention_margin": 0.0333,
+    "oracle_minimum_cost": 3.26,
+    "prediction_tolerance": 0.02,
+    "private_seed_stability": 0.95,
+    "public_only_predictability": 0.2,
+    "world_type": "true_mechanism"
+  },
+  "fair_comparison_truth": {
+    "compute_matched": "gain_survives",
+    "multi_seed": "gain_survives",
+    "norm_matched": "gain_survives",
+    "parameter_matched": "gain_survives_matched_parameters"
+  },
+  "family": "simulator",
+  "headline": {
+    "baseline_metrics": {
+      "validation_id.accuracy": 0.7131
+    },
+    "description": "The structured routing branch improves validation accuracy from 0.713 to 0.752 on the public validation split.",
+    "proposed_metrics": {
+      "validation_id.accuracy": 0.7524
+    }
+  },
+  "improvement_truth": {
+    "delta": 0.0393,
+    "status": "reproducible_positive_gain"
+  },
+  "interventions": [
+    {
+      "description": "Destroy the relevant routing structure while preserving trainability, parameter count, and output scale.",
+      "expected_delta": 0.006,
+      "id": "hidden_destroy_routing_structure",
+      "metadata": {
+        "intervention_type": "primary_confound_breaking"
+      },
+      "qualitative_result": "gain_disappears"
+    },
+    {
+      "description": "Preserve the structured routing relation under an unseen retrieval task configuration.",
+      "expected_delta": 0.0353,
+      "id": "hidden_unseen_task_structure_preserved",
+      "metadata": {
+        "intervention_type": "generalization"
+      },
+      "qualitative_result": "gain_survives"
+    },
+    {
+      "description": "Evaluate the proposed and baseline systems over a private panel of unseen training and data seeds.",
+      "expected_delta": 0.0373,
+      "id": "hidden_unseen_seed_panel",
+      "metadata": {
+        "intervention_type": "seed_stability"
+      },
+      "qualitative_result": "gain_survives"
+    },
+    {
+      "description": "Partially ablate the structured routing relation to half capacity while preserving branch trainability and output scale.",
+      "expected_delta": 0.0177,
+      "id": "hidden_partial_mechanism_ablation",
+      "metadata": {
+        "intervention_type": "dose_response"
+      },
+      "qualitative_result": "gain_shrinks"
+    }
+  ],
+  "mechanism_support_truth": "claimed_mechanism_supported",
+  "name": "compiled_0091",
+  "practical_value_truth": "the modification provides mechanism-specific retrieval improvement",
+  "simulator": {
+    "base_accuracy": {
+      "validation_distractor_shift": 0.6862,
+      "validation_id": 0.7131,
+      "validation_long": 0.6773,
+      "validation_position_shift": 0.6939
+    },
+    "base_parameter_count": 1000000,
+    "base_train_flops": 1000000000.0,
+    "seed_noise": 0.00119,
+    "variants": {
+      "baseline": {
+        "branch_base_norm_ratio": 0.0,
+        "estimated_train_flops": 1000000000.0,
+        "factors": {
+          "capacity": 0.0,
+          "compute": 0.0,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1000000
+      },
+      "fixed_random_branch": {
+        "branch_base_norm_ratio": 0.6,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.001,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000
+      },
+      "generic_learned_branch": {
+        "branch_base_norm_ratio": 0.66,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.007,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.001,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000,
+        "split_effects": {
+          "validation_distractor_shift": -0.002,
+          "validation_long": -0.003,
+          "validation_position_shift": -0.002
+        }
+      },
+      "geometry_destroyed_branch": {
+        "branch_base_norm_ratio": 0.71,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.004,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.001,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000,
+        "split_effects": {
+          "validation_distractor_shift": -0.002,
+          "validation_long": -0.003,
+          "validation_position_shift": -0.002
+        }
+      },
+      "norm_matched_proposed": {
+        "branch_base_norm_ratio": 0.61,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.004,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.0333,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000,
+        "split_effects": {
+          "validation_distractor_shift": -0.003,
+          "validation_long": -0.004,
+          "validation_position_shift": -0.002
+        }
+      },
+      "parameter_matched_wider": {
+        "branch_base_norm_ratio": 0.0,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.007,
+          "compute": 0.001,
+          "interactions": -0.001,
+          "mechanism": 0.0,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000,
+        "split_effects": {
+          "validation_distractor_shift": -0.002,
+          "validation_long": -0.003,
+          "validation_position_shift": -0.002
+        }
+      },
+      "proposed": {
+        "branch_base_norm_ratio": 0.72,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.004,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.0333,
+          "norm": 0.001,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000,
+        "split_effects": {
+          "validation_distractor_shift": -0.003,
+          "validation_long": -0.004,
+          "validation_position_shift": -0.002
+        }
+      },
+      "scale_matched_generic": {
+        "branch_base_norm_ratio": 0.72,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.007,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.004,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000,
+        "split_effects": {
+          "validation_distractor_shift": -0.002,
+          "validation_long": -0.003,
+          "validation_position_shift": -0.002
+        }
+      }
+    }
+  },
+  "world_id": "simulator/compiled_0091"
+}

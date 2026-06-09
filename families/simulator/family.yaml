@@ -1,0 +1,74 @@
+{
+  "name": "simulator",
+  "description": "Factorized causal simulator for MechanismBench v0.",
+  "actions": [
+    {
+      "name": "baseline",
+      "description": "Run the baseline model under the requested split and seeds.",
+      "default_cost": 1.0
+    },
+    {
+      "name": "proposed",
+      "description": "Run the public structured routing branch.",
+      "default_cost": 1.1
+    },
+    {
+      "name": "parameter_matched_wider",
+      "description": "Run a parameter-matched wider baseline.",
+      "default_cost": 1.2
+    },
+    {
+      "name": "generic_learned_branch",
+      "description": "Replace the structured branch with a generic learned branch.",
+      "default_cost": 1.2
+    },
+    {
+      "name": "fixed_random_branch",
+      "description": "Replace the branch with a fixed random non-learned branch.",
+      "default_cost": 1.0
+    },
+    {
+      "name": "geometry_destroyed_branch",
+      "description": "Destroy routing geometry while preserving trainability, parameters, and output scale.",
+      "default_cost": 1.25
+    },
+    {
+      "name": "norm_matched_proposed",
+      "description": "Run the proposed branch after matching output norm to the control.",
+      "default_cost": 1.15
+    },
+    {
+      "name": "scale_matched_generic",
+      "description": "Run a generic branch scaled to match the proposed branch norm.",
+      "default_cost": 1.15
+    },
+    {
+      "name": "multi_seed_replication",
+      "description": "Replicate the public baseline/proposed comparison over a seed panel.",
+      "default_cost": 1.6,
+      "params": {
+        "n_seeds": "int"
+      }
+    },
+    {
+      "name": "baseline_compute_matched",
+      "description": "Train/evaluate the baseline at the proposed model's estimated compute budget.",
+      "default_cost": 1.25
+    },
+    {
+      "name": "proposed_compute_limited",
+      "description": "Restrict the proposed model to the baseline estimated compute budget.",
+      "default_cost": 1.25
+    },
+    {
+      "name": "matched_flop_learning_curve",
+      "description": "Compare baseline and proposed learning curves at matched estimated FLOPs.",
+      "default_cost": 1.35
+    },
+    {
+      "name": "baseline_token_matched",
+      "description": "Compare the baseline under the same token budget as the proposed model.",
+      "default_cost": 1.1
+    }
+  ]
+}

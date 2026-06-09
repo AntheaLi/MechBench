@@ -1,0 +1,50 @@
+{
+  "name": "template_world",
+  "world_id": "template/template_world",
+  "family": "template",
+  "causal_label": "true_mechanism",
+  "headline": {
+    "baseline_metrics": {
+      "validation_id.accuracy": 0.70
+    },
+    "proposed_metrics": {
+      "validation_id.accuracy": 0.73
+    },
+    "description": "The proposed modification improves validation accuracy."
+  },
+  "budget": {
+    "max_cost": 10.0
+  },
+  "improvement_truth": {
+    "status": "reproducible_positive_gain",
+    "delta": 0.03
+  },
+  "interventions": [
+    {
+      "id": "hidden_1",
+      "description": "Private confound-breaking intervention.",
+      "expected_delta": 0.03,
+      "qualitative_result": "gain_survives"
+    }
+  ],
+  "experiment_table": {
+    "baseline": {
+      "cost": 1.0,
+      "metrics": {
+        "validation_id.accuracy": 0.70
+      }
+    },
+    "proposed": {
+      "cost": 1.0,
+      "metrics": {
+        "validation_id.accuracy": 0.73
+      }
+    }
+  },
+  "certificate": {
+    "oracle_minimum_cost": 2.0,
+    "exhaustive_cost": 8.0,
+    "prediction_tolerance": 0.05
+  }
+}
+

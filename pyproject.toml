@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mechanismbench"
+version = "0.0.1"
+description = "Controlled causal-auditing benchmark harness for automated researchers."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+mechbench = "mechbench.cli:main"
+
+[tool.setuptools]
+packages = [
+  "mechbench",
+  "mechbench.core",
+  "mechbench.interface",
+  "mechbench.scoring",
+  "mechbench.integrity",
+  "agents",
+  "analysis",
+]
+

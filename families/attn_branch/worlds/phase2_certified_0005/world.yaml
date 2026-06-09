@@ -1,0 +1,203 @@
+{
+  "name": "phase2_certified_0005",
+  "world_id": "attn_branch/phase2_certified_0005",
+  "family": "attn_branch",
+  "causal_label": "parameter_laundering",
+  "suite_profile": "phase2_certified",
+  "headline": {
+    "baseline_metrics": {
+      "validation_id.accuracy": 0.409
+    },
+    "proposed_metrics": {
+      "validation_id.accuracy": 0.451
+    },
+    "description": "The public structured branch improves retrieval accuracy, but matched generic capacity can recover the gain."
+  },
+  "budget": {
+    "max_cost": 72.0
+  },
+  "cost_reference_examples": 4096,
+  "baseline_reference_metrics": {
+    "validation_id.accuracy": 0.409,
+    "validation_long.accuracy": 0.371,
+    "validation_position_shift.accuracy": 0.355,
+    "validation_distractor_shift.accuracy": 0.382
+  },
+  "model": {
+    "base": {
+      "vocab_size": 100,
+      "d_model": 64,
+      "n_heads": 4,
+      "n_layers": 2,
+      "d_ff": 192,
+      "max_seq_len": 96,
+      "branch_d_inner": 32
+    }
+  },
+  "training": {
+    "base": {
+      "epochs": 12,
+      "batch_size": 64,
+      "lr": 0.003,
+      "weight_decay": 0.01,
+      "train_examples": 4096,
+      "seq_len": 48,
+      "log_every": 4,
+      "num_pairs": 3
+    }
+  },
+  "variants": {
+    "baseline": {
+      "model": {
+        "branch_type": "none"
+      },
+      "target_deltas": {
+        "validation_id": 0.0,
+        "validation_long": 0.0,
+        "validation_position_shift": 0.0,
+        "validation_distractor_shift": 0.0
+      }
+    },
+    "proposed": {
+      "model": {
+        "branch_type": "geometric",
+        "branch_alpha": 0.62
+      },
+      "target_deltas": {
+        "validation_id": 0.042,
+        "validation_long": 0.038,
+        "validation_position_shift": 0.036,
+        "validation_distractor_shift": 0.037
+      }
+    },
+    "generic_learned_branch": {
+      "model": {
+        "branch_type": "generic",
+        "branch_alpha": 0.62
+      },
+      "target_deltas": {
+        "validation_id": 0.04,
+        "validation_long": 0.037,
+        "validation_position_shift": 0.035,
+        "validation_distractor_shift": 0.036
+      }
+    },
+    "parameter_matched_wider": {
+      "model": {
+        "branch_type": "none",
+        "d_ff": 260
+      },
+      "target_deltas": {
+        "validation_id": 0.041,
+        "validation_long": 0.038,
+        "validation_position_shift": 0.036,
+        "validation_distractor_shift": 0.037
+      }
+    },
+    "geometry_destroyed_branch": {
+      "model": {
+        "branch_type": "destroyed",
+        "branch_alpha": 0.62
+      },
+      "target_deltas": {
+        "validation_id": 0.039,
+        "validation_long": 0.036,
+        "validation_position_shift": 0.034,
+        "validation_distractor_shift": 0.035
+      }
+    },
+    "norm_matched_proposed": {
+      "model": {
+        "branch_type": "geometric",
+        "branch_alpha": 0.62,
+        "branch_norm_scale": 0.82
+      },
+      "target_deltas": {
+        "validation_id": 0.04,
+        "validation_long": 0.037,
+        "validation_position_shift": 0.035,
+        "validation_distractor_shift": 0.036
+      }
+    },
+    "scale_matched_generic": {
+      "model": {
+        "branch_type": "generic",
+        "branch_alpha": 0.62,
+        "branch_norm_scale": 1.25
+      },
+      "target_deltas": {
+        "validation_id": 0.041,
+        "validation_long": 0.038,
+        "validation_position_shift": 0.036,
+        "validation_distractor_shift": 0.037
+      }
+    },
+    "fixed_random_branch": {
+      "model": {
+        "branch_type": "random",
+        "branch_alpha": 0.62
+      },
+      "target_deltas": {
+        "validation_id": 0.005,
+        "validation_long": 0.004,
+        "validation_position_shift": 0.004,
+        "validation_distractor_shift": 0.004
+      }
+    }
+  },
+  "improvement_truth": {
+    "status": "reproducible_positive_gain",
+    "delta": 0.042
+  },
+  "fair_comparison_truth": {
+    "parameter_matched": "gain_survives",
+    "compute_matched": "gain_survives",
+    "norm_matched": "gain_survives",
+    "multi_seed": "gain_survives"
+  },
+  "mechanism_support_truth": "claimed_mechanism_not_supported",
+  "practical_value_truth": "generic learned capacity explains the gain better than the claimed mechanism",
+  "interventions": [
+    {
+      "id": "hidden_equal_param_generic_learned_branch",
+      "description": "Replace the structured branch with an equal-parameter generic learned branch under the same training budget.",
+      "expected_delta": 0.04,
+      "qualitative_result": "gain_survives",
+      "metadata": {
+        "intervention_type": "strongest_alternative"
+      }
+    },
+    {
+      "id": "hidden_destroy_geometry_preserve_norm",
+      "description": "Destroy branch geometry while preserving output norm and trainable parameter count.",
+      "expected_delta": 0.039,
+      "qualitative_result": "gain_survives",
+      "metadata": {
+        "intervention_type": "primary_confound_breaking"
+      }
+    },
+    {
+      "id": "hidden_fixed_random_branch",
+      "description": "Use a fixed random non-learned branch with matched parameter count.",
+      "expected_delta": 0.005,
+      "qualitative_result": "gain_disappears",
+      "metadata": {
+        "intervention_type": "learned_capacity_check"
+      }
+    }
+  ],
+  "certificate": {
+    "episode_id": "attn_branch/phase2_certified_0005",
+    "world_type": "parameter_laundering",
+    "certificate_version": "0.2",
+    "suite_profile": "phase2_certified",
+    "certified": true,
+    "execution_validated": true,
+    "oracle_minimum_cost": 42.0,
+    "exhaustive_cost": 128.0,
+    "minimum_intervention_margin": 0.015,
+    "observed_intervention_margin": 0.034,
+    "prediction_tolerance": 0.02,
+    "estimated_suite_runtime": "deferred"
+  }
+}

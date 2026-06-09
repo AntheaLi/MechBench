@@ -1,0 +1,212 @@
+{
+  "name": "norm_laundering_001",
+  "world_id": "simulator/norm_laundering_001",
+  "family": "simulator",
+  "causal_label": "norm_laundering",
+  "headline": {
+    "baseline_metrics": {
+      "validation_id.accuracy": 0.704
+    },
+    "proposed_metrics": {
+      "validation_id.accuracy": 0.737
+    },
+    "description": "The structured routing branch improves validation accuracy from 70.4% to 73.7% on the public retrieval validation split."
+  },
+  "budget": {
+    "max_cost": 5.5
+  },
+  "improvement_truth": {
+    "status": "reproducible_positive_gain",
+    "delta": 0.033
+  },
+  "fair_comparison_truth": {
+    "parameter_matched": "gain_does_not_survive",
+    "compute_matched": "gain_survives",
+    "norm_matched": "gain_does_not_survive",
+    "multi_seed": "gain_survives"
+  },
+  "mechanism_support_truth": "claimed_mechanism_not_supported",
+  "practical_value_truth": "the apparent gain comes from branch output scale rather than routing structure",
+  "simulator": {
+    "base_accuracy": {
+      "validation_id": 0.704,
+      "validation_long": 0.668,
+      "validation_position_shift": 0.681,
+      "validation_distractor_shift": 0.676
+    },
+    "base_parameter_count": 1000000,
+    "base_train_flops": 1000000000.0,
+    "seed_noise": 0.0007,
+    "variants": {
+      "baseline": {
+        "parameter_count": 1000000,
+        "estimated_train_flops": 1000000000.0,
+        "branch_base_norm_ratio": 0.0,
+        "factors": {
+          "mechanism": 0.0,
+          "capacity": 0.0,
+          "compute": 0.0,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0,
+          "interactions": 0.0
+        }
+      },
+      "proposed": {
+        "parameter_count": 1210000,
+        "estimated_train_flops": 1210000000.0,
+        "branch_base_norm_ratio": 1.42,
+        "factors": {
+          "mechanism": 0.002,
+          "capacity": 0.003,
+          "compute": 0.001,
+          "norm": 0.027,
+          "seed": 0.0,
+          "task": 0.0,
+          "interactions": 0.0
+        },
+        "split_effects": {
+          "validation_long": -0.003,
+          "validation_position_shift": -0.002,
+          "validation_distractor_shift": -0.002
+        }
+      },
+      "parameter_matched_wider": {
+        "parameter_count": 1210000,
+        "estimated_train_flops": 1210000000.0,
+        "branch_base_norm_ratio": 0.0,
+        "factors": {
+          "mechanism": 0.0,
+          "capacity": 0.006,
+          "compute": 0.001,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0,
+          "interactions": 0.0
+        }
+      },
+      "generic_learned_branch": {
+        "parameter_count": 1210000,
+        "estimated_train_flops": 1210000000.0,
+        "branch_base_norm_ratio": 0.64,
+        "factors": {
+          "mechanism": 0.0,
+          "capacity": 0.006,
+          "compute": 0.001,
+          "norm": 0.001,
+          "seed": 0.0,
+          "task": 0.0,
+          "interactions": 0.0
+        }
+      },
+      "fixed_random_branch": {
+        "parameter_count": 1210000,
+        "estimated_train_flops": 1210000000.0,
+        "branch_base_norm_ratio": 0.60,
+        "factors": {
+          "mechanism": 0.0,
+          "capacity": 0.001,
+          "compute": 0.001,
+          "norm": 0.001,
+          "seed": 0.0,
+          "task": 0.0,
+          "interactions": 0.0
+        }
+      },
+      "geometry_destroyed_branch": {
+        "parameter_count": 1210000,
+        "estimated_train_flops": 1210000000.0,
+        "branch_base_norm_ratio": 1.40,
+        "factors": {
+          "mechanism": 0.0,
+          "capacity": 0.004,
+          "compute": 0.001,
+          "norm": 0.027,
+          "seed": 0.0,
+          "task": 0.0,
+          "interactions": 0.0
+        },
+        "split_effects": {
+          "validation_long": -0.003,
+          "validation_position_shift": -0.002,
+          "validation_distractor_shift": -0.002
+        }
+      },
+      "norm_matched_proposed": {
+        "parameter_count": 1210000,
+        "estimated_train_flops": 1210000000.0,
+        "branch_base_norm_ratio": 0.62,
+        "factors": {
+          "mechanism": 0.002,
+          "capacity": 0.003,
+          "compute": 0.001,
+          "norm": 0.001,
+          "seed": 0.0,
+          "task": 0.0,
+          "interactions": 0.0
+        }
+      },
+      "scale_matched_generic": {
+        "parameter_count": 1210000,
+        "estimated_train_flops": 1210000000.0,
+        "branch_base_norm_ratio": 1.42,
+        "factors": {
+          "mechanism": 0.0,
+          "capacity": 0.006,
+          "compute": 0.001,
+          "norm": 0.027,
+          "seed": 0.0,
+          "task": 0.0,
+          "interactions": 0.0
+        },
+        "split_effects": {
+          "validation_long": -0.003,
+          "validation_position_shift": -0.002,
+          "validation_distractor_shift": -0.002
+        }
+      }
+    }
+  },
+  "interventions": [
+    {
+      "id": "hidden_reduce_proposed_norm",
+      "description": "Reduce the proposed branch norm while preserving its public routing geometry.",
+      "expected_delta": 0.006,
+      "qualitative_result": "gain_disappears",
+      "metadata": {
+        "intervention_type": "primary_confound_breaking"
+      }
+    },
+    {
+      "id": "hidden_increase_generic_norm",
+      "description": "Increase a generic branch to the original proposed branch output norm.",
+      "expected_delta": 0.032,
+      "qualitative_result": "gain_survives",
+      "metadata": {
+        "intervention_type": "strongest_alternative"
+      }
+    },
+    {
+      "id": "hidden_destroy_geometry_preserve_norm",
+      "description": "Destroy routing geometry while preserving the original proposed branch output norm.",
+      "expected_delta": 0.031,
+      "qualitative_result": "gain_survives",
+      "metadata": {
+        "intervention_type": "generalization"
+      }
+    }
+  ],
+  "certificate": {
+    "episode_id": "simulator/norm_laundering_001",
+    "world_type": "norm_laundering",
+    "certificate_version": "0.1",
+    "public_only_predictability": 0.27,
+    "oracle_minimum_cost": 3.7,
+    "exhaustive_cost": 12.6,
+    "private_seed_stability": 0.91,
+    "minimum_intervention_margin": 0.015,
+    "observed_intervention_margin": 0.026,
+    "prediction_tolerance": 0.02,
+    "certified": true
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "name": "parameter_laundering",
+  "world_id": "fixture/parameter_laundering",
+  "family": "fixture",
+  "causal_label": "parameter_laundering",
+  "headline": {
+    "baseline_metrics": {
+      "validation_id.accuracy": 0.700
+    },
+    "proposed_metrics": {
+      "validation_id.accuracy": 0.733
+    },
+    "description": "The structured routing branch improves validation accuracy from 70.0% to 73.3%."
+  },
+  "budget": {
+    "max_cost": 5.0
+  },
+  "improvement_truth": {
+    "status": "reproducible_positive_gain",
+    "delta": 0.033
+  },
+  "fair_comparison_truth": {
+    "parameter_matched": "gain_does_not_survive_as_mechanism_specific",
+    "compute_matched": "gain_survives",
+    "norm_matched": "gain_survives",
+    "multi_seed": "gain_survives"
+  },
+  "mechanism_support_truth": "claimed_mechanism_not_supported",
+  "practical_value_truth": "the branch may still provide useful generic capacity",
+  "interventions": [
+    {
+      "id": "hidden_generic_branch",
+      "description": "Replace the structured branch with a generic learned branch of equal parameter count.",
+      "expected_delta": 0.031,
+      "qualitative_result": "gain_survives"
+    },
+    {
+      "id": "hidden_destroy_geometry",
+      "description": "Destroy the proposed geometry while preserving trainability and output scale.",
+      "expected_delta": 0.029,
+      "qualitative_result": "gain_survives"
+    },
+    {
+      "id": "hidden_fixed_random",
+      "description": "Replace the structured branch with a fixed non-learned random branch.",
+      "expected_delta": 0.004,
+      "qualitative_result": "gain_disappears"
+    }
+  ],
+  "experiment_table": {
+    "baseline": {
+      "cost": 1.0,
+      "model_stats": {
+        "parameter_count": 1000000,
+        "estimated_train_flops": 1000000000.0,
+        "branch_base_norm_ratio": 0.0
+      },
+      "metrics": {
+        "validation_id.accuracy": 0.700
+      }
+    },
+    "proposed": {
+      "cost": 1.0,
+      "model_stats": {
+        "parameter_count": 1200000,
+        "estimated_train_flops": 1200000000.0,
+        "branch_base_norm_ratio": 0.71
+      },
+      "metrics": {
+        "validation_id.accuracy": 0.733
+      }
+    },
+    "generic_learned_branch": {
+      "cost": 1.2,
+      "model_stats": {
+        "parameter_count": 1200000,
+        "estimated_train_flops": 1200000000.0,
+        "branch_base_norm_ratio": 0.68
+      },
+      "metrics": {
+        "validation_id.accuracy": 0.731
+      }
+    },
+    "geometry_destroyed_branch": {
+      "cost": 1.2,
+      "model_stats": {
+        "parameter_count": 1200000,
+        "estimated_train_flops": 1200000000.0,
+        "branch_base_norm_ratio": 0.69
+      },
+      "metrics": {
+        "validation_id.accuracy": 0.729
+      }
+    },
+    "norm_matched_proposed": {
+      "cost": 1.1,
+      "model_stats": {
+        "parameter_count": 1200000,
+        "estimated_train_flops": 1200000000.0,
+        "branch_base_norm_ratio": 0.66
+      },
+      "metrics": {
+        "validation_id.accuracy": 0.732
+      }
+    }
+  },
+  "certificate": {
+    "certificate_version": "0.1",
+    "oracle_minimum_cost": 2.2,
+    "exhaustive_cost": 5.5,
+    "minimum_intervention_margin": 0.015,
+    "prediction_tolerance": 0.05,
+    "certified": true
+  }
+}
+

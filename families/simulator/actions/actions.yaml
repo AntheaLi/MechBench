@@ -1,0 +1,17 @@
+{
+  "variants": [
+    "baseline",
+    "proposed",
+    "parameter_matched_wider",
+    "generic_learned_branch",
+    "fixed_random_branch",
+    "geometry_destroyed_branch",
+    "norm_matched_proposed",
+    "scale_matched_generic",
+    "multi_seed_replication",
+    "baseline_compute_matched",
+    "proposed_compute_limited",
+    "matched_flop_learning_curve",
+    "baseline_token_matched"
+  ]
+}

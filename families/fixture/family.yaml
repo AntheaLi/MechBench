@@ -1,0 +1,32 @@
+{
+  "name": "fixture",
+  "description": "Small table-backed family for harness smoke tests.",
+  "actions": [
+    {
+      "name": "baseline",
+      "description": "Evaluate the baseline model.",
+      "default_cost": 1.0
+    },
+    {
+      "name": "proposed",
+      "description": "Evaluate the proposed structured branch.",
+      "default_cost": 1.0
+    },
+    {
+      "name": "generic_learned_branch",
+      "description": "Replace the structured branch with a generic learned branch.",
+      "default_cost": 1.2
+    },
+    {
+      "name": "geometry_destroyed_branch",
+      "description": "Destroy branch geometry while preserving trainability.",
+      "default_cost": 1.2
+    },
+    {
+      "name": "norm_matched_proposed",
+      "description": "Match the proposed branch output norm to a control.",
+      "default_cost": 1.1
+    }
+  ]
+}
+

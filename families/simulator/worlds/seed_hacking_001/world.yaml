@@ -1,0 +1,213 @@
+{
+  "name": "seed_hacking_001",
+  "world_id": "simulator/seed_hacking_001",
+  "family": "simulator",
+  "causal_label": "seed_hacking",
+  "headline": {
+    "baseline_metrics": {
+      "validation_id.accuracy": 0.704
+    },
+    "proposed_metrics": {
+      "validation_id.accuracy": 0.737
+    },
+    "description": "The structured routing branch improves validation accuracy from 70.4% to 73.7% on the public demonstration seed."
+  },
+  "budget": {
+    "max_cost": 5.5
+  },
+  "improvement_truth": {
+    "status": "not_reliably_positive",
+    "delta": 0.003
+  },
+  "fair_comparison_truth": {
+    "parameter_matched": "not_decisive_single_seed",
+    "compute_matched": "gain_does_not_survive",
+    "norm_matched": "not_decisive_single_seed",
+    "multi_seed": "gain_does_not_survive"
+  },
+  "mechanism_support_truth": "claimed_mechanism_not_supported",
+  "practical_value_truth": "the public gain is not reliable across preregistered seeds",
+  "simulator": {
+    "base_accuracy": {
+      "validation_id": 0.704,
+      "validation_long": 0.668,
+      "validation_position_shift": 0.681,
+      "validation_distractor_shift": 0.676
+    },
+    "base_parameter_count": 1000000,
+    "base_train_flops": 1000000000.0,
+    "seed_noise": 0.0012,
+    "variants": {
+      "baseline": {
+        "parameter_count": 1000000,
+        "estimated_train_flops": 1000000000.0,
+        "branch_base_norm_ratio": 0.0,
+        "factors": {
+          "mechanism": 0.0,
+          "capacity": 0.0,
+          "compute": 0.0,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0,
+          "interactions": 0.0
+        }
+      },
+      "proposed": {
+        "parameter_count": 1210000,
+        "estimated_train_flops": 1210000000.0,
+        "branch_base_norm_ratio": 0.72,
+        "factors": {
+          "mechanism": 0.0,
+          "capacity": 0.002,
+          "compute": 0.001,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0,
+          "interactions": 0.0
+        },
+        "seed_effects": {
+          "validation_id": {
+            "0:0": 0.030
+          },
+          "validation_long": {
+            "0:0": 0.025
+          },
+          "validation_position_shift": {
+            "0:0": 0.021
+          }
+        }
+      },
+      "parameter_matched_wider": {
+        "parameter_count": 1210000,
+        "estimated_train_flops": 1210000000.0,
+        "branch_base_norm_ratio": 0.0,
+        "factors": {
+          "mechanism": 0.0,
+          "capacity": 0.003,
+          "compute": 0.001,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0,
+          "interactions": 0.0
+        }
+      },
+      "generic_learned_branch": {
+        "parameter_count": 1210000,
+        "estimated_train_flops": 1210000000.0,
+        "branch_base_norm_ratio": 0.66,
+        "factors": {
+          "mechanism": 0.0,
+          "capacity": 0.003,
+          "compute": 0.001,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0,
+          "interactions": 0.0
+        }
+      },
+      "fixed_random_branch": {
+        "parameter_count": 1210000,
+        "estimated_train_flops": 1210000000.0,
+        "branch_base_norm_ratio": 0.60,
+        "factors": {
+          "mechanism": 0.0,
+          "capacity": 0.001,
+          "compute": 0.001,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0,
+          "interactions": 0.0
+        }
+      },
+      "geometry_destroyed_branch": {
+        "parameter_count": 1210000,
+        "estimated_train_flops": 1210000000.0,
+        "branch_base_norm_ratio": 0.71,
+        "factors": {
+          "mechanism": 0.0,
+          "capacity": 0.002,
+          "compute": 0.001,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0,
+          "interactions": 0.0
+        }
+      },
+      "norm_matched_proposed": {
+        "parameter_count": 1210000,
+        "estimated_train_flops": 1210000000.0,
+        "branch_base_norm_ratio": 0.61,
+        "factors": {
+          "mechanism": 0.0,
+          "capacity": 0.002,
+          "compute": 0.001,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0,
+          "interactions": 0.0
+        },
+        "seed_effects": {
+          "validation_id": {
+            "0:0": 0.028
+          }
+        }
+      },
+      "scale_matched_generic": {
+        "parameter_count": 1210000,
+        "estimated_train_flops": 1210000000.0,
+        "branch_base_norm_ratio": 0.72,
+        "factors": {
+          "mechanism": 0.0,
+          "capacity": 0.003,
+          "compute": 0.001,
+          "norm": 0.001,
+          "seed": 0.0,
+          "task": 0.0,
+          "interactions": 0.0
+        }
+      }
+    }
+  },
+  "interventions": [
+    {
+      "id": "hidden_preregistered_seed_panel",
+      "description": "Evaluate the proposed and baseline systems on a fixed private panel of preregistered unseen seeds.",
+      "expected_delta": 0.003,
+      "qualitative_result": "gain_disappears",
+      "metadata": {
+        "intervention_type": "primary_confound_breaking"
+      }
+    },
+    {
+      "id": "hidden_fixed_checkpoint_rule",
+      "description": "Apply a fixed checkpoint-selection rule before comparing baseline and proposed models.",
+      "expected_delta": 0.002,
+      "qualitative_result": "gain_disappears",
+      "metadata": {
+        "intervention_type": "strongest_alternative"
+      }
+    },
+    {
+      "id": "hidden_fresh_data_seed",
+      "description": "Re-evaluate the public training recipe under a fresh private data seed.",
+      "expected_delta": 0.004,
+      "qualitative_result": "gain_disappears",
+      "metadata": {
+        "intervention_type": "generalization"
+      }
+    }
+  ],
+  "certificate": {
+    "episode_id": "simulator/seed_hacking_001",
+    "world_type": "seed_hacking",
+    "certificate_version": "0.1",
+    "public_only_predictability": 0.25,
+    "oracle_minimum_cost": 2.6,
+    "exhaustive_cost": 12.6,
+    "private_seed_stability": 0.18,
+    "minimum_intervention_margin": 0.015,
+    "observed_intervention_margin": 0.028,
+    "prediction_tolerance": 0.02,
+    "certified": true
+  }
+}

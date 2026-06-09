@@ -1,0 +1,203 @@
+{
+  "name": "phase2_certified_0002",
+  "world_id": "attn_branch/phase2_certified_0002",
+  "family": "attn_branch",
+  "causal_label": "true_mechanism",
+  "suite_profile": "phase2_certified",
+  "headline": {
+    "baseline_metrics": {
+      "validation_id.accuracy": 0.405
+    },
+    "proposed_metrics": {
+      "validation_id.accuracy": 0.443
+    },
+    "description": "The public structured routing branch improves retrieval under a lower branch scale."
+  },
+  "budget": {
+    "max_cost": 72.0
+  },
+  "cost_reference_examples": 4096,
+  "baseline_reference_metrics": {
+    "validation_id.accuracy": 0.405,
+    "validation_long.accuracy": 0.368,
+    "validation_position_shift.accuracy": 0.352,
+    "validation_distractor_shift.accuracy": 0.379
+  },
+  "model": {
+    "base": {
+      "vocab_size": 100,
+      "d_model": 64,
+      "n_heads": 4,
+      "n_layers": 2,
+      "d_ff": 192,
+      "max_seq_len": 96,
+      "branch_d_inner": 32
+    }
+  },
+  "training": {
+    "base": {
+      "epochs": 12,
+      "batch_size": 64,
+      "lr": 0.003,
+      "weight_decay": 0.01,
+      "train_examples": 4096,
+      "seq_len": 48,
+      "log_every": 4,
+      "num_pairs": 3
+    }
+  },
+  "variants": {
+    "baseline": {
+      "model": {
+        "branch_type": "none"
+      },
+      "target_deltas": {
+        "validation_id": 0.0,
+        "validation_long": 0.0,
+        "validation_position_shift": 0.0,
+        "validation_distractor_shift": 0.0
+      }
+    },
+    "proposed": {
+      "model": {
+        "branch_type": "geometric",
+        "branch_alpha": 0.54
+      },
+      "target_deltas": {
+        "validation_id": 0.038,
+        "validation_long": 0.035,
+        "validation_position_shift": 0.033,
+        "validation_distractor_shift": 0.034
+      }
+    },
+    "generic_learned_branch": {
+      "model": {
+        "branch_type": "generic",
+        "branch_alpha": 0.54
+      },
+      "target_deltas": {
+        "validation_id": 0.009,
+        "validation_long": 0.008,
+        "validation_position_shift": 0.007,
+        "validation_distractor_shift": 0.008
+      }
+    },
+    "parameter_matched_wider": {
+      "model": {
+        "branch_type": "none",
+        "d_ff": 260
+      },
+      "target_deltas": {
+        "validation_id": 0.01,
+        "validation_long": 0.009,
+        "validation_position_shift": 0.008,
+        "validation_distractor_shift": 0.009
+      }
+    },
+    "geometry_destroyed_branch": {
+      "model": {
+        "branch_type": "destroyed",
+        "branch_alpha": 0.54
+      },
+      "target_deltas": {
+        "validation_id": 0.006,
+        "validation_long": 0.005,
+        "validation_position_shift": 0.005,
+        "validation_distractor_shift": 0.005
+      }
+    },
+    "norm_matched_proposed": {
+      "model": {
+        "branch_type": "geometric",
+        "branch_alpha": 0.54,
+        "branch_norm_scale": 0.82
+      },
+      "target_deltas": {
+        "validation_id": 0.036,
+        "validation_long": 0.033,
+        "validation_position_shift": 0.031,
+        "validation_distractor_shift": 0.032
+      }
+    },
+    "scale_matched_generic": {
+      "model": {
+        "branch_type": "generic",
+        "branch_alpha": 0.54,
+        "branch_norm_scale": 1.25
+      },
+      "target_deltas": {
+        "validation_id": 0.011,
+        "validation_long": 0.01,
+        "validation_position_shift": 0.009,
+        "validation_distractor_shift": 0.01
+      }
+    },
+    "fixed_random_branch": {
+      "model": {
+        "branch_type": "random",
+        "branch_alpha": 0.54
+      },
+      "target_deltas": {
+        "validation_id": 0.003,
+        "validation_long": 0.003,
+        "validation_position_shift": 0.002,
+        "validation_distractor_shift": 0.003
+      }
+    }
+  },
+  "improvement_truth": {
+    "status": "reproducible_positive_gain",
+    "delta": 0.038
+  },
+  "fair_comparison_truth": {
+    "parameter_matched": "gain_does_not_survive",
+    "compute_matched": "gain_survives",
+    "norm_matched": "gain_survives",
+    "multi_seed": "gain_survives"
+  },
+  "mechanism_support_truth": "claimed_mechanism_supported",
+  "practical_value_truth": "the structured branch provides mechanism-specific retrieval improvement",
+  "interventions": [
+    {
+      "id": "hidden_destroy_routing_structure",
+      "description": "Destroy the routing geometry while preserving trainability and parameter count.",
+      "expected_delta": 0.006,
+      "qualitative_result": "gain_disappears",
+      "metadata": {
+        "intervention_type": "primary_confound_breaking"
+      }
+    },
+    {
+      "id": "hidden_unseen_task_structure_preserved",
+      "description": "Preserve the structured routing relation under a private position-shifted retrieval distribution.",
+      "expected_delta": 0.033,
+      "qualitative_result": "gain_survives",
+      "metadata": {
+        "intervention_type": "generalization"
+      }
+    },
+    {
+      "id": "hidden_partial_mechanism_ablation",
+      "description": "Partially ablate the mechanism to half capacity while preserving the rest of the model.",
+      "expected_delta": 0.017,
+      "qualitative_result": "gain_shrinks",
+      "metadata": {
+        "intervention_type": "dose_response"
+      }
+    }
+  ],
+  "certificate": {
+    "episode_id": "attn_branch/phase2_certified_0002",
+    "world_type": "true_mechanism",
+    "certificate_version": "0.2",
+    "suite_profile": "phase2_certified",
+    "certified": true,
+    "execution_validated": true,
+    "oracle_minimum_cost": 42.0,
+    "exhaustive_cost": 128.0,
+    "minimum_intervention_margin": 0.015,
+    "observed_intervention_margin": 0.032,
+    "prediction_tolerance": 0.02,
+    "estimated_suite_runtime": "deferred"
+  }
+}

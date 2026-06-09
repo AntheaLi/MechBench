@@ -1,0 +1,101 @@
+{
+  "name": "parameter_laundering_002",
+  "world_id": "attn_branch/parameter_laundering_002",
+  "family": "attn_branch",
+  "causal_label": "parameter_laundering",
+  "headline": {
+    "baseline_metrics": {"validation_id.accuracy": 0.0889},
+    "proposed_metrics": {"validation_id.accuracy": 0.1288},
+    "description": "A smaller structured branch appears to help, but parameter-matched capacity controls recover the advantage."
+  },
+  "budget": {"max_cost": 12.0},
+  "baseline_reference_metrics": {
+    "validation_id.accuracy": 0.0889,
+    "validation_long.accuracy": 0.083,
+    "validation_position_shift.accuracy": 0.086,
+    "validation_distractor_shift.accuracy": 0.087
+  },
+  "model": {
+    "base": {
+      "vocab_size": 100,
+      "d_model": 32,
+      "n_heads": 2,
+      "n_layers": 1,
+      "d_ff": 64,
+      "max_seq_len": 64,
+      "branch_d_inner": 16
+    }
+  },
+  "training": {
+    "base": {
+      "epochs": 3,
+      "batch_size": 64,
+      "lr": 0.005,
+      "train_examples": 512,
+      "seq_len": 32,
+      "log_every": 3
+    }
+  },
+  "variants": {
+    "baseline": {"model": {"branch_type": "none"}},
+    "proposed": {"model": {"branch_type": "geometric", "branch_alpha": 0.5}},
+    "generic_learned_branch": {
+      "model": {"branch_type": "generic", "branch_alpha": 0.5},
+      "metric_adjustments": {"validation_id": 0.033}
+    },
+    "parameter_matched_wider": {
+      "model": {"branch_type": "none", "d_ff": 96},
+      "metric_adjustments": {"validation_id": 0.037}
+    },
+    "geometry_destroyed_branch": {
+      "model": {"branch_type": "destroyed", "branch_alpha": 0.5},
+      "metric_adjustments": {"validation_id": 0.031}
+    },
+    "norm_matched_proposed": {"model": {"branch_type": "geometric", "branch_alpha": 0.5, "branch_norm_scale": 0.8}},
+    "fixed_random_branch": {"model": {"branch_type": "random", "branch_alpha": 0.5}}
+  },
+  "improvement_truth": {"status": "reproducible_positive_gain", "delta": 0.0399},
+  "fair_comparison_truth": {
+    "parameter_matched": "gain_survives",
+    "compute_matched": "gain_survives",
+    "norm_matched": "gain_survives",
+    "multi_seed": "gain_survives"
+  },
+  "mechanism_support_truth": "claimed_mechanism_not_supported",
+  "practical_value_truth": "generic learned capacity explains the gain better than the claimed mechanism",
+  "interventions": [
+    {
+      "id": "hidden_equal_param_generic_learned_branch",
+      "description": "Replace the structured branch with an equal-parameter generic learned branch under the same training budget.",
+      "expected_delta": 0.038,
+      "qualitative_result": "gain_survives",
+      "metadata": {"intervention_type": "strongest_alternative"}
+    },
+    {
+      "id": "hidden_destroy_geometry_preserve_norm",
+      "description": "Destroy branch geometry while preserving output norm and trainable parameter count.",
+      "expected_delta": 0.036,
+      "qualitative_result": "gain_survives",
+      "metadata": {"intervention_type": "primary_confound_breaking"}
+    },
+    {
+      "id": "hidden_fixed_random_branch",
+      "description": "Use a fixed random non-learned branch with matched parameter count.",
+      "expected_delta": 0.005,
+      "qualitative_result": "gain_disappears",
+      "metadata": {"intervention_type": "learned_capacity_check"}
+    }
+  ],
+  "certificate": {
+    "episode_id": "attn_branch/parameter_laundering_002",
+    "world_type": "parameter_laundering",
+    "certificate_version": "0.1",
+    "vertical_slice": true,
+    "certified": true,
+    "oracle_minimum_cost": 10.5,
+    "exhaustive_cost": 22.0,
+    "minimum_intervention_margin": 0.015,
+    "observed_intervention_margin": 0.031,
+    "prediction_tolerance": 0.02
+  }
+}

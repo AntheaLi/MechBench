@@ -1,0 +1,100 @@
+{
+  "name": "seed_hacking_001",
+  "world_id": "attn_branch/seed_hacking_001",
+  "family": "attn_branch",
+  "causal_label": "seed_hacking",
+  "headline": {
+    "baseline_metrics": {"validation_id.accuracy": 0.0889},
+    "proposed_metrics": {"validation_id.accuracy": 0.1348},
+    "description": "The public structured branch improves on the demonstration seed but the selected seed is not representative."
+  },
+  "budget": {"max_cost": 12.0},
+  "max_seed_panel": 3,
+  "baseline_reference_metrics": {
+    "validation_id.accuracy": 0.0889,
+    "validation_long.accuracy": 0.083,
+    "validation_position_shift.accuracy": 0.086,
+    "validation_distractor_shift.accuracy": 0.087
+  },
+  "model": {
+    "base": {
+      "vocab_size": 100,
+      "d_model": 32,
+      "n_heads": 2,
+      "n_layers": 1,
+      "d_ff": 64,
+      "max_seq_len": 64,
+      "branch_d_inner": 16
+    }
+  },
+  "training": {
+    "base": {
+      "epochs": 3,
+      "batch_size": 64,
+      "lr": 0.005,
+      "train_examples": 512,
+      "seq_len": 32,
+      "log_every": 3
+    }
+  },
+  "variants": {
+    "baseline": {"model": {"branch_type": "none"}},
+    "proposed": {
+      "model": {"branch_type": "geometric", "branch_alpha": 0.6},
+      "seed_effects": {
+        "validation_id": {"default": -0.037, "0:0": 0.0},
+        "validation_long": {"default": -0.035, "0:0": 0.0},
+        "validation_position_shift": {"default": -0.035, "0:0": 0.0}
+      }
+    },
+    "generic_learned_branch": {"model": {"branch_type": "generic", "branch_alpha": 0.6}},
+    "geometry_destroyed_branch": {"model": {"branch_type": "destroyed", "branch_alpha": 0.6}, "metric_adjustments": {"validation_id": -0.035}},
+    "norm_matched_proposed": {"model": {"branch_type": "geometric", "branch_alpha": 0.6, "branch_norm_scale": 0.8}},
+    "fixed_random_branch": {"model": {"branch_type": "random", "branch_alpha": 0.6}}
+  },
+  "improvement_truth": {"status": "not_reliably_positive", "delta": 0.009},
+  "fair_comparison_truth": {
+    "parameter_matched": "not_tested",
+    "compute_matched": "not_tested",
+    "norm_matched": "not_certifying_without_seed_panel",
+    "multi_seed": "gain_does_not_survive"
+  },
+  "mechanism_support_truth": "claimed_mechanism_not_supported",
+  "practical_value_truth": "the public improvement is a selected-seed artifact",
+  "interventions": [
+    {
+      "id": "hidden_preregistered_seed_panel",
+      "description": "Evaluate the proposed and baseline systems over a preregistered private panel of training and data seeds.",
+      "expected_delta": 0.009,
+      "qualitative_result": "gain_disappears",
+      "metadata": {"intervention_type": "primary_confound_breaking"}
+    },
+    {
+      "id": "hidden_fixed_checkpoint_rule",
+      "description": "Use a fixed checkpoint selection rule before reading validation results.",
+      "expected_delta": 0.006,
+      "qualitative_result": "gain_disappears",
+      "metadata": {"intervention_type": "selection_rule"}
+    },
+    {
+      "id": "hidden_fresh_data_seed",
+      "description": "Regenerate the retrieval data with a fresh private data seed.",
+      "expected_delta": 0.008,
+      "qualitative_result": "gain_disappears",
+      "metadata": {"intervention_type": "generalization"}
+    }
+  ],
+  "certificate": {
+    "episode_id": "attn_branch/seed_hacking_001",
+    "world_type": "seed_hacking",
+    "certificate_version": "0.1",
+    "vertical_slice": true,
+    "certified": true,
+    "oracle_minimum_cost": 10.5,
+    "exhaustive_cost": 22.0,
+    "private_seed_stability": 0.18,
+    "minimum_intervention_margin": 0.015,
+    "observed_intervention_margin": 0.037,
+    "prediction_tolerance": 0.02
+  }
+}

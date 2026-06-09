@@ -1,0 +1,224 @@
+{
+  "budget": {
+    "max_cost": 5.41
+  },
+  "causal_label": "norm_laundering",
+  "certificate": {
+    "certificate_version": "0.1",
+    "certified": true,
+    "checks": {
+      "has_at_least_three_private_interventions": true,
+      "headline_baseline_in_shared_range": true,
+      "headline_delta_in_shared_range": true,
+      "minimum_intervention_margin_met": true,
+      "norm_matching_reduces_gain": true,
+      "norm_ratio_reduced_by_matching": true,
+      "proposed_branch_is_loud": true,
+      "scale_matched_generic_recovers_gain": true,
+      "structure_destroyed_norm_preserved_recovers_gain": true
+    },
+    "compiler_version": "0.1",
+    "episode_id": "simulator/compiled_0024",
+    "exhaustive_cost": 12.83,
+    "minimum_intervention_margin": 0.015,
+    "observed_intervention_margin": 0.034,
+    "oracle_minimum_cost": 4.08,
+    "prediction_tolerance": 0.02,
+    "private_seed_stability": 0.9,
+    "public_only_predictability": 0.2,
+    "world_type": "norm_laundering"
+  },
+  "fair_comparison_truth": {
+    "compute_matched": "gain_survives",
+    "multi_seed": "gain_survives",
+    "norm_matched": "gain_does_not_survive",
+    "parameter_matched": "gain_does_not_survive"
+  },
+  "family": "simulator",
+  "headline": {
+    "baseline_metrics": {
+      "validation_id.accuracy": 0.7126
+    },
+    "description": "The structured routing branch improves validation accuracy from 0.713 to 0.753 on the public validation split.",
+    "proposed_metrics": {
+      "validation_id.accuracy": 0.7525
+    }
+  },
+  "improvement_truth": {
+    "delta": 0.04,
+    "status": "reproducible_positive_gain"
+  },
+  "interventions": [
+    {
+      "description": "Reduce the proposed branch norm while preserving its public routing geometry.",
+      "expected_delta": 0.006,
+      "id": "hidden_reduce_proposed_norm",
+      "metadata": {
+        "intervention_type": "primary_confound_breaking"
+      },
+      "qualitative_result": "gain_disappears"
+    },
+    {
+      "description": "Increase a generic branch to the original proposed branch output norm.",
+      "expected_delta": 0.039,
+      "id": "hidden_increase_generic_norm",
+      "metadata": {
+        "intervention_type": "strongest_alternative"
+      },
+      "qualitative_result": "gain_survives"
+    },
+    {
+      "description": "Destroy routing geometry while preserving the original proposed branch output norm.",
+      "expected_delta": 0.038,
+      "id": "hidden_destroy_geometry_preserve_norm",
+      "metadata": {
+        "intervention_type": "generalization"
+      },
+      "qualitative_result": "gain_survives"
+    }
+  ],
+  "mechanism_support_truth": "claimed_mechanism_not_supported",
+  "name": "compiled_0024",
+  "practical_value_truth": "the apparent gain comes from branch output scale rather than routing structure",
+  "simulator": {
+    "base_accuracy": {
+      "validation_distractor_shift": 0.6852,
+      "validation_id": 0.7126,
+      "validation_long": 0.6759,
+      "validation_position_shift": 0.6942
+    },
+    "base_parameter_count": 1000000,
+    "base_train_flops": 1000000000.0,
+    "seed_noise": 0.00089,
+    "variants": {
+      "baseline": {
+        "branch_base_norm_ratio": 0.0,
+        "estimated_train_flops": 1000000000.0,
+        "factors": {
+          "capacity": 0.0,
+          "compute": 0.0,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1000000
+      },
+      "fixed_random_branch": {
+        "branch_base_norm_ratio": 0.6,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.001,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.001,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000
+      },
+      "generic_learned_branch": {
+        "branch_base_norm_ratio": 0.64,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.006,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.001,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000
+      },
+      "geometry_destroyed_branch": {
+        "branch_base_norm_ratio": 1.39,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.004,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.034,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000,
+        "split_effects": {
+          "validation_distractor_shift": -0.002,
+          "validation_long": -0.003,
+          "validation_position_shift": -0.002
+        }
+      },
+      "norm_matched_proposed": {
+        "branch_base_norm_ratio": 0.56,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.003,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.002,
+          "norm": 0.001,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000
+      },
+      "parameter_matched_wider": {
+        "branch_base_norm_ratio": 0.0,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.006,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000
+      },
+      "proposed": {
+        "branch_base_norm_ratio": 1.41,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.003,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.002,
+          "norm": 0.034,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000,
+        "split_effects": {
+          "validation_distractor_shift": -0.002,
+          "validation_long": -0.003,
+          "validation_position_shift": -0.002
+        }
+      },
+      "scale_matched_generic": {
+        "branch_base_norm_ratio": 1.41,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.006,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.034,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000,
+        "split_effects": {
+          "validation_distractor_shift": -0.002,
+          "validation_long": -0.003,
+          "validation_position_shift": -0.002
+        }
+      }
+    }
+  },
+  "world_id": "simulator/compiled_0024"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "template",
+  "description": "Template family.",
+  "actions": [
+    {
+      "name": "baseline",
+      "description": "Run the baseline.",
+      "default_cost": 1.0
+    },
+    {
+      "name": "proposed",
+      "description": "Run the proposed modification.",
+      "default_cost": 1.0
+    }
+  ]
+}
+

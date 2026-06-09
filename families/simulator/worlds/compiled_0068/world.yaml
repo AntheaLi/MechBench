@@ -1,0 +1,247 @@
+{
+  "budget": {
+    "max_cost": 6.0
+  },
+  "causal_label": "parameter_laundering",
+  "certificate": {
+    "certificate_version": "0.1",
+    "certified": true,
+    "checks": {
+      "fixed_random_branch_underperforms": true,
+      "generic_learned_branch_recovers_gain": true,
+      "geometry_destroyed_branch_recovers_gain": true,
+      "has_at_least_three_private_interventions": true,
+      "headline_baseline_in_shared_range": true,
+      "headline_delta_in_shared_range": true,
+      "minimum_intervention_margin_met": true,
+      "parameter_matched_wider_recovers_gain": true
+    },
+    "compiler_version": "0.1",
+    "episode_id": "simulator/compiled_0068",
+    "exhaustive_cost": 12.69,
+    "minimum_intervention_margin": 0.015,
+    "observed_intervention_margin": 0.0214,
+    "oracle_minimum_cost": 3.9,
+    "prediction_tolerance": 0.02,
+    "private_seed_stability": 0.94,
+    "public_only_predictability": 0.2,
+    "world_type": "parameter_laundering"
+  },
+  "fair_comparison_truth": {
+    "compute_matched": "gain_survives",
+    "multi_seed": "gain_survives",
+    "norm_matched": "gain_survives",
+    "parameter_matched": "gain_survives_as_generic_capacity"
+  },
+  "family": "simulator",
+  "headline": {
+    "baseline_metrics": {
+      "validation_id.accuracy": 0.7126
+    },
+    "description": "The structured routing branch improves validation accuracy from 0.713 to 0.740 on the public validation split.",
+    "proposed_metrics": {
+      "validation_id.accuracy": 0.74
+    }
+  },
+  "improvement_truth": {
+    "delta": 0.0274,
+    "status": "reproducible_positive_gain"
+  },
+  "interventions": [
+    {
+      "description": "Replace the structured branch with a generic learned branch of equal parameter count.",
+      "expected_delta": 0.0254,
+      "id": "hidden_equal_param_generic_learned_branch",
+      "metadata": {
+        "intervention_type": "primary_confound_breaking"
+      },
+      "qualitative_result": "gain_survives"
+    },
+    {
+      "description": "Destroy routing geometry while preserving trainability, parameter count, and output norm.",
+      "expected_delta": 0.0244,
+      "id": "hidden_destroy_geometry_preserve_norm",
+      "metadata": {
+        "intervention_type": "strongest_alternative"
+      },
+      "qualitative_result": "gain_survives"
+    },
+    {
+      "description": "Evaluate proposed, generic learned, and baseline systems over a private unseen seed panel.",
+      "expected_delta": 0.0254,
+      "id": "hidden_unseen_seed_panel",
+      "metadata": {
+        "intervention_type": "seed_stability"
+      },
+      "qualitative_result": "gain_survives"
+    },
+    {
+      "description": "Replace the structured branch with a fixed random non-learned branch of equal parameter count.",
+      "expected_delta": 0.003,
+      "id": "hidden_fixed_random_branch",
+      "metadata": {
+        "intervention_type": "negative_control"
+      },
+      "qualitative_result": "gain_disappears"
+    }
+  ],
+  "mechanism_support_truth": "claimed_mechanism_not_supported",
+  "name": "compiled_0068",
+  "practical_value_truth": "the modification may still provide useful generic learned capacity",
+  "simulator": {
+    "base_accuracy": {
+      "validation_distractor_shift": 0.6854,
+      "validation_id": 0.7126,
+      "validation_long": 0.6761,
+      "validation_position_shift": 0.6942
+    },
+    "base_parameter_count": 1000000,
+    "base_train_flops": 1000000000.0,
+    "seed_noise": 0.00061,
+    "variants": {
+      "baseline": {
+        "branch_base_norm_ratio": 0.0,
+        "estimated_train_flops": 1000000000.0,
+        "factors": {
+          "capacity": 0.0,
+          "compute": 0.0,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1000000
+      },
+      "fixed_random_branch": {
+        "branch_base_norm_ratio": 0.6,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.001,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000
+      },
+      "generic_learned_branch": {
+        "branch_base_norm_ratio": 0.65,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.0244,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.001,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000,
+        "split_effects": {
+          "validation_distractor_shift": -0.002,
+          "validation_long": -0.003,
+          "validation_position_shift": -0.002
+        }
+      },
+      "geometry_destroyed_branch": {
+        "branch_base_norm_ratio": 0.71,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.0244,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.001,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000,
+        "split_effects": {
+          "validation_distractor_shift": -0.002,
+          "validation_long": -0.003,
+          "validation_position_shift": -0.002
+        }
+      },
+      "norm_matched_proposed": {
+        "branch_base_norm_ratio": 0.61,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.0234,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.001,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000,
+        "split_effects": {
+          "validation_distractor_shift": -0.002,
+          "validation_long": -0.003,
+          "validation_position_shift": -0.002
+        }
+      },
+      "parameter_matched_wider": {
+        "branch_base_norm_ratio": 0.0,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.0254,
+          "compute": 0.001,
+          "interactions": -0.001,
+          "mechanism": 0.0,
+          "norm": 0.0,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000,
+        "split_effects": {
+          "validation_distractor_shift": -0.002,
+          "validation_long": -0.003,
+          "validation_position_shift": -0.002
+        }
+      },
+      "proposed": {
+        "branch_base_norm_ratio": 0.72,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.0234,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.001,
+          "norm": 0.002,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000,
+        "split_effects": {
+          "validation_distractor_shift": -0.002,
+          "validation_long": -0.003,
+          "validation_position_shift": -0.002
+        }
+      },
+      "scale_matched_generic": {
+        "branch_base_norm_ratio": 0.72,
+        "estimated_train_flops": 1210000000.0,
+        "factors": {
+          "capacity": 0.0244,
+          "compute": 0.001,
+          "interactions": 0.0,
+          "mechanism": 0.0,
+          "norm": 0.002,
+          "seed": 0.0,
+          "task": 0.0
+        },
+        "parameter_count": 1210000,
+        "split_effects": {
+          "validation_distractor_shift": -0.002,
+          "validation_long": -0.003,
+          "validation_position_shift": -0.002
+        }
+      }
+    }
+  },
+  "world_id": "simulator/compiled_0068"
+}

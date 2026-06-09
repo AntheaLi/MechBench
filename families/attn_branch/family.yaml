@@ -1,0 +1,54 @@
+{
+  "name": "attn_branch",
+  "description": "Tiny PyTorch structured-attention branch family for Phase 2 vertical-slice episodes.",
+  "actions": [
+    {
+      "name": "baseline",
+      "description": "Train and evaluate the baseline tiny Transformer.",
+      "default_cost": 1.0
+    },
+    {
+      "name": "proposed",
+      "description": "Train and evaluate the public structured routing branch.",
+      "default_cost": 1.15
+    },
+    {
+      "name": "generic_learned_branch",
+      "description": "Replace the structured branch with a generic learned branch.",
+      "default_cost": 1.2
+    },
+    {
+      "name": "parameter_matched_wider",
+      "description": "Train a parameter-matched wider baseline.",
+      "default_cost": 1.2
+    },
+    {
+      "name": "geometry_destroyed_branch",
+      "description": "Destroy branch routing geometry while preserving branch trainability.",
+      "default_cost": 1.25
+    },
+    {
+      "name": "norm_matched_proposed",
+      "description": "Train the proposed branch after reducing its output norm scale.",
+      "default_cost": 1.15
+    },
+    {
+      "name": "scale_matched_generic",
+      "description": "Train a generic branch scaled to match the proposed branch norm.",
+      "default_cost": 1.15
+    },
+    {
+      "name": "fixed_random_branch",
+      "description": "Replace the branch with a fixed random non-learned branch.",
+      "default_cost": 1.0
+    },
+    {
+      "name": "multi_seed_replication",
+      "description": "Replicate the public baseline/proposed comparison over several seeds.",
+      "default_cost": 1.6,
+      "params": {
+        "n_seeds": "int"
+      }
+    }
+  ]
+}
