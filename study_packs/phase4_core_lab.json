@@ -1,0 +1,46 @@
+{
+  "name": "phase4_core_lab",
+  "description": "Recommended first lab run: baselines plus one strong LLM scaffold with three repeats on 25 balanced simulator episodes.",
+  "worlds": {
+    "selector": "simulator_compiled_balanced",
+    "count": 25
+  },
+  "repeats": 3,
+  "max_cost_usd": 10.0,
+  "include_traces": true,
+  "token_estimate": {
+    "input_tokens_per_episode": 3500,
+    "output_tokens_per_episode": 1200
+  },
+  "runs": [
+    {
+      "id": "naive",
+      "agent": "naive",
+      "tags": ["baseline", "free"]
+    },
+    {
+      "id": "scripted",
+      "agent": "scripted",
+      "tags": ["baseline", "free"]
+    },
+    {
+      "id": "oracle",
+      "agent": "oracle",
+      "tags": ["calibration", "free"]
+    },
+    {
+      "id": "gpt54_scaffold",
+      "agent": "llm_scaffold",
+      "provider": "openai",
+      "model": "gpt-5.4",
+      "api_key_env": "OPENAI_API_KEY",
+      "temperature": 0.0,
+      "max_tokens": 4096,
+      "price_per_million_tokens": {
+        "input": 2.5,
+        "output": 15.0
+      },
+      "tags": ["llm_scaffold", "paid", "frontier"]
+    }
+  ]
+}

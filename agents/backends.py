@@ -9,6 +9,7 @@ Environment variables
 ANTHROPIC_API_KEY   – required for AnthropicBackend
 OPENAI_API_KEY      – required for OpenAIBackend
 OPENAI_BASE_URL     – optional, defaults to https://api.openai.com/v1
+GEMINI_API_KEY      – required for GeminiBackend
 
 Usage::
 
@@ -17,6 +18,7 @@ Usage::
 
     agent = LLMScaffoldAgent(backend=AnthropicBackend())
     agent = LLMScaffoldAgent(backend=OpenAIBackend(model="gpt-4o"))
+    agent = LLMScaffoldAgent(backend=GeminiBackend(model="gemini-3.5-pro"))
 """
 
 from __future__ import annotations
@@ -28,9 +30,20 @@ import time
 from dataclasses import dataclass, field
 from typing import Any
 
-import httpx
+try:
+    import httpx
+except ModuleNotFoundError:  # pragma: no cover - depends on local environment
+    httpx = None  # type: ignore[assignment]
 
 logger = logging.getLogger(__name__)
+
+
+def _require_httpx() -> None:
+    if httpx is None:
+        raise RuntimeError(
+            "LLM provider backends require httpx. Install project dependencies "
+            "or run `pip install httpx`."
+        )
 
 # ---------------------------------------------------------------------------
 # Shared helpers
@@ -64,6 +77,7 @@ def _retry_request(
     retryable_statuses: tuple[int, ...] = (429, 500, 502, 503, 529),
 ) -> httpx.Response:
     """Call *func* with exponential backoff on transient HTTP errors."""
+    _require_httpx()
     last_exc: Exception | None = None
     for attempt in range(max_retries + 1):
         try:
@@ -131,6 +145,7 @@ class AnthropicBackend:
         timeout: float = 120.0,
         max_retries: int = 3,
     ):
+        _require_httpx()
         self.model = model
         self.api_key = api_key or os.environ.get("ANTHROPIC_API_KEY", "")
         if not self.api_key:
@@ -247,6 +262,7 @@ class OpenAIBackend:
         timeout: float = 120.0,
         max_retries: int = 3,
     ):
+        _require_httpx()
         self.model = model
         self.api_key = api_key or os.environ.get("OPENAI_API_KEY", "")
         if not self.api_key:
@@ -323,6 +339,127 @@ class OpenAIBackend:
 
 
 # ---------------------------------------------------------------------------
+# Gemini generateContent API
+# ---------------------------------------------------------------------------
+
+class GeminiBackend:
+    """Calls the Gemini generateContent REST API via httpx.
+
+    Parameters
+    ----------
+    model : str
+        Model name. Defaults to ``gemini-3.5-pro``.
+    api_key : str | None
+        API key. Falls back to ``GEMINI_API_KEY`` env var.
+    base_url : str | None
+        API base URL. Defaults to Google's v1beta endpoint.
+    max_tokens : int
+        Maximum tokens in the response.
+    temperature : float
+        Sampling temperature.
+    timeout : float
+        HTTP request timeout in seconds.
+    max_retries : int
+        Number of automatic retries on transient errors.
+    """
+
+    DEFAULT_BASE_URL = "https://generativelanguage.googleapis.com/v1beta"
+
+    def __init__(
+        self,
+        *,
+        model: str = "gemini-3.5-pro",
+        api_key: str | None = None,
+        base_url: str | None = None,
+        max_tokens: int = 4096,
+        temperature: float = 0.0,
+        timeout: float = 120.0,
+        max_retries: int = 3,
+    ):
+        _require_httpx()
+        self.model = model
+        self.api_key = api_key or os.environ.get("GEMINI_API_KEY", "")
+        if not self.api_key:
+            raise ValueError(
+                "GeminiBackend requires an API key. "
+                "Set GEMINI_API_KEY or pass api_key=."
+            )
+        self.base_url = (base_url or self.DEFAULT_BASE_URL).rstrip("/")
+        self.max_tokens = max_tokens
+        self.temperature = temperature
+        self.timeout = timeout
+        self.max_retries = max_retries
+        self.usage = TokenUsage()
+        self._client = httpx.Client(timeout=self.timeout)
+
+    def complete(self, messages: list[dict[str, str]], *, purpose: str) -> str:
+        """Send messages to Gemini generateContent and return text."""
+        system_text = "\n\n".join(
+            msg["content"] for msg in messages if msg.get("role") == "system"
+        )
+        contents: list[dict[str, Any]] = []
+        for msg in messages:
+            role = msg.get("role", "user")
+            if role == "system":
+                continue
+            gemini_role = "model" if role == "assistant" else "user"
+            contents.append({
+                "role": gemini_role,
+                "parts": [{"text": msg.get("content", "")}],
+            })
+
+        body: dict[str, Any] = {
+            "contents": contents,
+            "generationConfig": {
+                "temperature": self.temperature,
+                "maxOutputTokens": self.max_tokens,
+            },
+        }
+        if system_text:
+            body["system_instruction"] = {"parts": [{"text": system_text}]}
+
+        headers = {
+            "x-goog-api-key": self.api_key,
+            "content-type": "application/json",
+        }
+        url = f"{self.base_url}/models/{self.model}:generateContent"
+        logger.info("gemini request: model=%s purpose=%s url=%s", self.model, purpose, url)
+
+        response = _retry_request(
+            lambda: self._client.post(url, json=body, headers=headers),
+            max_retries=self.max_retries,
+        )
+        if response.status_code != 200:
+            error_body = response.text[:500]
+            raise RuntimeError(f"Gemini API error {response.status_code}: {error_body}")
+
+        data = response.json()
+        usage = data.get("usageMetadata", {})
+        input_tokens = int(usage.get("promptTokenCount", 0) or 0)
+        output_tokens = int(usage.get("candidatesTokenCount", 0) or 0) + int(
+            usage.get("thoughtsTokenCount", 0) or 0
+        )
+        self.usage.record(input_tokens=input_tokens, output_tokens=output_tokens)
+
+        candidates = data.get("candidates", [])
+        if not candidates:
+            raise RuntimeError("Gemini API returned no candidates")
+        parts = candidates[0].get("content", {}).get("parts", [])
+        texts = [part.get("text", "") for part in parts if part.get("text")]
+        result = "\n".join(texts)
+        logger.info(
+            "gemini response: purpose=%s tokens=%d+%d",
+            purpose,
+            input_tokens,
+            output_tokens,
+        )
+        return result
+
+    def close(self) -> None:
+        self._client.close()
+
+
+# ---------------------------------------------------------------------------
 # Factory
 # ---------------------------------------------------------------------------
 
@@ -332,13 +469,14 @@ def make_backend(
     model: str | None = None,
     api_key: str | None = None,
     **kwargs: Any,
-) -> AnthropicBackend | OpenAIBackend:
+) -> AnthropicBackend | OpenAIBackend | GeminiBackend:
     """Create a backend by provider name.
 
     Parameters
     ----------
     provider : str
-        One of ``"anthropic"`` or ``"openai"``.
+        One of ``"anthropic"``, ``"openai"``, ``"openai_compatible"``, or
+        ``"gemini"``.
     model : str | None
         Override the default model for the provider.
     api_key : str | None
@@ -360,4 +498,21 @@ def make_backend(
         if api_key:
             kw["api_key"] = api_key
         return OpenAIBackend(**kw)
-    raise ValueError(f"unknown provider: {provider!r}  (expected 'anthropic' or 'openai')")
+    if provider == "openai_compatible":
+        kw = {**kwargs}
+        if model:
+            kw["model"] = model
+        if api_key:
+            kw["api_key"] = api_key
+        return OpenAIBackend(**kw)
+    if provider == "gemini":
+        kw = {**kwargs}
+        if model:
+            kw["model"] = model
+        if api_key:
+            kw["api_key"] = api_key
+        return GeminiBackend(**kw)
+    raise ValueError(
+        f"unknown provider: {provider!r}  "
+        "(expected 'anthropic', 'openai', 'openai_compatible', or 'gemini')"
+    )

@@ -6,13 +6,18 @@ These tests use mock HTTP responses — no real API calls are made.
 from __future__ import annotations
 
 import json
+import importlib.util
 import unittest
 from unittest.mock import MagicMock, patch
+
+if importlib.util.find_spec("httpx") is None:
+    raise unittest.SkipTest("httpx is not installed")
 
 import httpx
 
 from agents.backends import (
     AnthropicBackend,
+    GeminiBackend,
     OpenAIBackend,
     TokenUsage,
     make_backend,
@@ -50,6 +55,32 @@ def _mock_openai_response(text: str = '{"answer": 42}', prompt_tokens: int = 100
         "usage": {"prompt_tokens": prompt_tokens, "completion_tokens": completion_tokens, "total_tokens": prompt_tokens + completion_tokens},
     }
     response = httpx.Response(200, json=body, request=httpx.Request("POST", "https://api.openai.com/v1/chat/completions"))
+    return response
+
+
+def _mock_gemini_response(text: str = '{"answer": 42}', prompt_tokens: int = 100, output_tokens: int = 50):
+    """Build a mock httpx.Response matching the Gemini generateContent shape."""
+    body = {
+        "candidates": [
+            {
+                "content": {
+                    "parts": [{"text": text}],
+                    "role": "model",
+                },
+                "finishReason": "STOP",
+            }
+        ],
+        "usageMetadata": {
+            "promptTokenCount": prompt_tokens,
+            "candidatesTokenCount": output_tokens,
+            "totalTokenCount": prompt_tokens + output_tokens,
+        },
+    }
+    response = httpx.Response(
+        200,
+        json=body,
+        request=httpx.Request("POST", "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-pro:generateContent"),
+    )
     return response
 
 
@@ -189,6 +220,52 @@ class OpenAIBackendTest(unittest.TestCase):
         self.assertIn("custom.api.com", str(url))
 
 
+class GeminiBackendTest(unittest.TestCase):
+    def _make_backend(self) -> GeminiBackend:
+        return GeminiBackend(api_key="test-key", max_retries=0)
+
+    @patch.object(httpx.Client, "post")
+    def test_complete_returns_text(self, mock_post):
+        mock_post.return_value = _mock_gemini_response('{"plan": "run experiments"}')
+        backend = self._make_backend()
+        messages = [
+            {"role": "system", "content": "You are a test agent."},
+            {"role": "user", "content": "Do something."},
+        ]
+        result = backend.complete(messages, purpose="plan")
+        self.assertEqual(result, '{"plan": "run experiments"}')
+
+        body = mock_post.call_args.kwargs.get("json") or mock_post.call_args[1].get("json")
+        self.assertIn("system_instruction", body)
+        self.assertEqual(body["contents"][0]["role"], "user")
+
+    @patch.object(httpx.Client, "post")
+    def test_usage_tracked(self, mock_post):
+        mock_post.return_value = _mock_gemini_response(prompt_tokens=123, output_tokens=45)
+        backend = self._make_backend()
+        backend.complete([{"role": "user", "content": "hi"}], purpose="test")
+        self.assertEqual(backend.usage.input_tokens, 123)
+        self.assertEqual(backend.usage.output_tokens, 45)
+        self.assertEqual(backend.usage.calls, 1)
+
+    @patch.object(httpx.Client, "post")
+    def test_api_error_raises(self, mock_post):
+        mock_post.return_value = httpx.Response(
+            403,
+            json={"error": {"message": "permission denied"}},
+            request=httpx.Request("POST", "https://generativelanguage.googleapis.com/v1beta/models/x:generateContent"),
+        )
+        backend = self._make_backend()
+        with self.assertRaises(RuntimeError) as ctx:
+            backend.complete([{"role": "user", "content": "hi"}], purpose="test")
+        self.assertIn("403", str(ctx.exception))
+
+    def test_missing_api_key_raises(self):
+        with patch.dict("os.environ", {}, clear=True):
+            with self.assertRaises(ValueError):
+                GeminiBackend()
+
+
 class MakeBackendFactoryTest(unittest.TestCase):
     def test_anthropic(self):
         backend = make_backend("anthropic", api_key="test-key", model="claude-haiku-4-5-20251001")
@@ -200,9 +277,24 @@ class MakeBackendFactoryTest(unittest.TestCase):
         self.assertIsInstance(backend, OpenAIBackend)
         self.assertEqual(backend.model, "gpt-4o-mini")
 
+    def test_openai_compatible(self):
+        backend = make_backend(
+            "openai_compatible",
+            api_key="test-key",
+            model="fable-5",
+            base_url="https://example.test/v1",
+        )
+        self.assertIsInstance(backend, OpenAIBackend)
+        self.assertEqual(backend.model, "fable-5")
+
+    def test_gemini(self):
+        backend = make_backend("gemini", api_key="test-key", model="gemini-3.5-pro")
+        self.assertIsInstance(backend, GeminiBackend)
+        self.assertEqual(backend.model, "gemini-3.5-pro")
+
     def test_unknown_provider_raises(self):
         with self.assertRaises(ValueError):
-            make_backend("gemini", api_key="test")
+            make_backend("bogus", api_key="test")
 
 
 class CLIIntegrationTest(unittest.TestCase):

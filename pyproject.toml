@@ -8,7 +8,9 @@ version = "0.0.1"
 description = "Controlled causal-auditing benchmark harness for automated researchers."
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = [
+  "httpx>=0.27",
+]
 
 [project.scripts]
 mechbench = "mechbench.cli:main"
@@ -18,9 +20,11 @@ packages = [
   "mechbench",
   "mechbench.core",
   "mechbench.interface",
+  "mechbench.phase4",
   "mechbench.scoring",
+  "mechbench.simulator",
   "mechbench.integrity",
+  "mechbench.utils",
   "agents",
   "analysis",
 ]
-

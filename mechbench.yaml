@@ -1,0 +1,15 @@
+{
+  "default_budget": {
+    "max_cost": 10.0
+  },
+  "scoring_weights": {
+    "heldout_intervention_prediction": 40,
+    "causal_world_diagnosis": 20,
+    "improvement_validity": 10,
+    "calibration": 10,
+    "evidence_grounding": 10,
+    "experimental_efficiency": 5,
+    "protocol_integrity": 5
+  }
+}
+

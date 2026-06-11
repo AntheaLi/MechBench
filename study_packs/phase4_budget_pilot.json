@@ -1,0 +1,41 @@
+{
+  "name": "phase4_budget_pilot",
+  "description": "Cheap real-LLM pilot: local baselines plus one inexpensive OpenAI-compatible scaffold run on a balanced simulator subset.",
+  "worlds": {
+    "selector": "simulator_compiled_balanced",
+    "count": 10
+  },
+  "repeats": 1,
+  "max_cost_usd": 1.0,
+  "include_traces": true,
+  "token_estimate": {
+    "input_tokens_per_episode": 3500,
+    "output_tokens_per_episode": 1200
+  },
+  "runs": [
+    {
+      "id": "naive",
+      "agent": "naive",
+      "tags": ["baseline", "free"]
+    },
+    {
+      "id": "scripted",
+      "agent": "scripted",
+      "tags": ["baseline", "free"]
+    },
+    {
+      "id": "gpt54_mini_scaffold",
+      "agent": "llm_scaffold",
+      "provider": "openai",
+      "model": "gpt-5.4-mini",
+      "api_key_env": "OPENAI_API_KEY",
+      "temperature": 0.0,
+      "max_tokens": 4096,
+      "price_per_million_tokens": {
+        "input": 0.75,
+        "output": 4.5
+      },
+      "tags": ["llm_scaffold", "paid", "budget"]
+    }
+  ]
+}

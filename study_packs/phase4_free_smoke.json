@@ -1,0 +1,32 @@
+{
+  "name": "phase4_free_smoke",
+  "description": "Zero-cost smoke test for the full Phase 4 reporting pipeline. Uses only local baselines and the deterministic mock LLM scaffold.",
+  "worlds": {
+    "selector": "simulator_compiled_balanced",
+    "count": 10
+  },
+  "repeats": 1,
+  "max_cost_usd": 0.0,
+  "include_traces": true,
+  "token_estimate": {
+    "input_tokens_per_episode": 3500,
+    "output_tokens_per_episode": 1200
+  },
+  "runs": [
+    {
+      "id": "naive",
+      "agent": "naive",
+      "tags": ["baseline", "free"]
+    },
+    {
+      "id": "scripted",
+      "agent": "scripted",
+      "tags": ["baseline", "free"]
+    },
+    {
+      "id": "llm_mock",
+      "agent": "llm_mock",
+      "tags": ["llm_scaffold", "free", "mock"]
+    }
+  ]
+}
